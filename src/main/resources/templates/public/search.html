@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Search Employee / Team</title>
+</head>
+<body>
+<h1>Search Kudos</h1>
+
+<form method="get" th:action="@{/public/search/results}">
+    <label>Employee or Team Name:</label>
+    <label>
+        <input type="text" name="query" required/>
+    </label>
+    <button type="submit">Search</button>
+</form>
+
+<div th:if="${results}">
+    <h2>Results</h2>
+    <ul>
+        <li th:each="kudos : ${results}" th:text="${kudos.sender.name + ' → ' + kudos.receiver.name + ': ' + kudos.message}"></li>
+    </ul>
+</div>
+</body>
+</html>

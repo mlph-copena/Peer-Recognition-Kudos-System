@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Upload Employees</title>
+</head>
+<body>
+<h1>Upload Employee CSV</h1>
+<form th:action="@{/api/employees/upload}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv" required />
+    <button type="submit">Upload</button>
+</form>
+<hr>
+<form th:action="@{/api/employees/reset-kudos}" method="post">
+    <button type="submit">Reset Kudos</button>
+</form>
+</body>
+</html>

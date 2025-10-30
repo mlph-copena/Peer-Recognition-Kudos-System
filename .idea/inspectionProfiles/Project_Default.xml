@@ -1,0 +1,59 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="12">
+            <item index="0" class="java.lang.String" itemvalue="th:action" />
+            <item index="1" class="java.lang.String" itemvalue="th:each" />
+            <item index="2" class="java.lang.String" itemvalue="th:value" />
+            <item index="3" class="java.lang.String" itemvalue="th:text" />
+            <item index="4" class="java.lang.String" itemvalue="th:if" />
+            <item index="5" class="java.lang.String" itemvalue="th:href" />
+            <item index="6" class="java.lang.String" itemvalue="th:replace" />
+            <item index="7" class="java.lang.String" itemvalue="th:fragment" />
+            <item index="8" class="java.lang.String" itemvalue="th:data-success" />
+            <item index="9" class="java.lang.String" itemvalue="th:data-error" />
+            <item index="10" class="java.lang.String" itemvalue="th:append" />
+            <item index="11" class="java.lang.String" itemvalue="th:attr" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="VulnerableLibrariesLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="isIgnoringEnabled" value="true" />
+      <option name="ignoredModules">
+        <list>
+          <option value="KudosSystem" />
+          <option value="KudosSystem" />
+          <option value="KudosSystem" />
+          <option value="KudosSystem" />
+          <option value="KudosSystem" />
+          <option value="KudosSystem" />
+        </list>
+      </option>
+      <option name="ignoredPackages">
+        <list>
+          <option value="org.springframework.security:spring-security-config:6.3.3" />
+          <option value="ch.qos.logback:logback-classic:1.5.8" />
+          <option value="ch.qos.logback:logback-core:1.5.8" />
+          <option value="org.apache.tomcat.embed:tomcat-embed-core:10.1.30" />
+          <option value="org.springframework:spring-beans:6.1.13" />
+          <option value="org.springframework:spring-webmvc:6.1.13" />
+        </list>
+      </option>
+      <option name="ignoredReasons">
+        <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Fixed in branch" />
+          <option value="Fixed in branch" />
+          <option value="In progress" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

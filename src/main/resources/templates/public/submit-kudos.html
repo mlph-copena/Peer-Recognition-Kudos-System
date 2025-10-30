@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Submit Kudos</title>
+</head>
+<body>
+<h1>Send Kudos</h1>
+
+<form method="post" th:action="@{/api/public/send}">
+    <label>Sender Name:</label>
+    <label>
+        <input type="text" name="senderName" required/>
+    </label><br/>
+
+    <label>Receiver Name:</label>
+    <label>
+        <input type="text" name="receiverName" required/>
+    </label><br/>
+
+    <label>Message:</label>
+    <label>
+        <textarea name="message" required></textarea>
+    </label><br/>
+
+    <label>Anonymous:</label>
+    <label>
+        <input type="checkbox" name="anonymous"/>
+    </label><br/>
+
+    <button type="submit">Send Kudos</button>
+</form>
+</body>
+</html>

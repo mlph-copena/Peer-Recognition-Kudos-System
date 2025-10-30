@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kudos Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+        }
+        #sidebar {
+            min-width: 220px;
+            max-width: 220px;
+            background: #343a40;
+            color: white;
+        }
+        #sidebar .nav-link {
+            color: white;
+            cursor: pointer;
+        }
+        #sidebar .nav-link.active {
+            background: #495057;
+            border-radius: 4px;
+        }
+        #content {
+            flex: 1;
+            padding: 20px;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div id="sidebar" class="d-flex flex-column p-3">
+    <h4 class="mb-4 text-center">Kudos Admin</h4>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <span class="nav-link active" data-target="upload">Manage Employees</span>
+        </li>
+<!--        <li>-->
+<!--            <span class="nav-link" data-target="upload">Manage Employees</span>-->
+<!--        </li>-->
+        <li>
+            <span class="nav-link" data-target="employees">Send Kudos to Employee</span>
+        </li>
+
+        <li>
+            <span class="nav-link" data-target="teams">Send Kudos to Team</span>
+        </li>
+        <li>
+            <span class="nav-link" data-target="comments">Leave Comment</span>
+        </li>
+        <li>
+            <span class="nav-link" data-target="history">Kudos History</span>
+        </li>
+        <li>
+            <span class="nav-link" data-target="leaderboard">Leaderboards</span>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div id="content">
+    <!-- ✅ Manage Employees Section -->
+    <div id="upload" class="content-section active">
+        <h2>Manage Employees</h2>
+
+        <!-- Upload Employee CSV -->
+        <div class="card p-4 mb-4 shadow-sm">
+            <h5>Upload Employee CSV</h5>
+            <form
+                    id="uploadForm"
+                    th:action="@{/admin/upload-employees}"
+                    method="post"
+                    enctype="multipart/form-data"
+            >
+                <div class="mb-3">
+                    <input
+                            class="form-control"
+                            type="file"
+                            name="file"
+                            accept=".csv"
+                            required
+                    />
+                </div>
+                <button type="submit" class="btn btn-success">Upload CSV</button>
+            </form>
+        </div>
+
+        <!-- 🔍 Search Field -->
+        <div class="card p-4 mb-4 shadow-sm">
+            <h5>Search Employees / Teams</h5>
+            <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="Search by name or department..."
+            />
+        </div>
+
+        <!-- 👩‍💼 Employee Table -->
+        <div class="card p-4 shadow-sm">
+            <h5>All Employees / Teams</h5>
+            <table id="employeeTable" class="table table-bordered table-striped mt-3">
+                <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department / Team</th>
+                    <th>Kudos</th>
+                    <th>Public Comment</th>
+                </tr>
+                </thead>
+                <tbody id="employeeTableBody">
+                <tr th:each="emp : ${allEmployees}" th:attr="data-id=${emp.id}">
+                    <td th:text="${emp.name}"></td>
+                    <td th:text="${emp.email}"></td>
+                    <td th:text="${emp.department}"></td>
+                    <td th:text="${emp.kudosCount}"></td>
+                    <td th:text="${emp.commentCount}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 💬 Public Kudos / Comments -->
+        <div class="card p-4 shadow-sm mt-4">
+            <h5>Public Kudos / Comments</h5>
+            <ul id="kudosList" class="list-group">
+                <li class="list-group-item text-muted text-center">
+                    No kudos/comments to show
+                </li>
+            </ul>
+        </div>
+    </div>
+
+<!--    &lt;!&ndash; ✅ Manage Employees Section &ndash;&gt;-->
+<!--    <div id="upload" class="content-section">-->
+<!--        <h2>Manage Employees</h2>-->
+
+<!--        &lt;!&ndash; Upload Employee CSV &ndash;&gt;-->
+<!--        <div class="card p-4 mb-4 shadow-sm">-->
+<!--            <h5>Upload Employee CSV</h5>-->
+<!--            <form-->
+<!--                    id="uploadForm"-->
+<!--                    th:action="@{/admin/upload-employees}"-->
+<!--                    method="post"-->
+<!--                    enctype="multipart/form-data"-->
+<!--            >-->
+<!--                <div class="mb-3">-->
+<!--                    <input-->
+<!--                            class="form-control"-->
+<!--                            type="file"-->
+<!--                            name="file"-->
+<!--                            accept=".csv"-->
+<!--                            required-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <button type="submit" class="btn btn-success">Upload CSV</button>-->
+<!--            </form>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 🔍 Search Field &ndash;&gt;-->
+<!--        <div class="card p-4 mb-4 shadow-sm">-->
+<!--            <h5>Search Employees / Teams</h5>-->
+<!--            <input-->
+<!--                    type="text"-->
+<!--                    id="searchInput"-->
+<!--                    class="form-control"-->
+<!--                    placeholder="Search by name or department..."-->
+<!--            />-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 👩‍💼 Employee Table &ndash;&gt;-->
+<!--        <div class="card p-4 shadow-sm">-->
+<!--            <h5>All Employees / Teams</h5>-->
+<!--            <table id="employeeTable" class="table table-bordered table-striped mt-3">-->
+<!--                <thead class="table-dark">-->
+<!--                <tr>-->
+<!--                    <th>Name</th>-->
+<!--                    <th>Email</th>-->
+<!--                    <th>Department / Team</th>-->
+<!--                    <th>Kudos</th>-->
+<!--                    <th>Public Comment</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody id="employeeTableBody">-->
+<!--                <tr th:each="emp : ${allEmployees}" th:attr="data-id=${emp.id}">-->
+<!--                    <td th:text="${emp.name}"></td>-->
+<!--                    <td th:text="${emp.email}"></td>-->
+<!--                    <td th:text="${emp.department}"></td>-->
+<!--                    <td th:text="${emp.kudosCount}"></td>-->
+<!--                    <td th:text="${emp.commentCount}"></td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 💬 Public Kudos / Comments &ndash;&gt;-->
+<!--        <div class="card p-4 shadow-sm mt-4">-->
+<!--            <h5>Public Kudos / Comments</h5>-->
+<!--            <ul id="kudosList" class="list-group">-->
+<!--                <li class="list-group-item text-muted text-center">-->
+<!--                    No kudos/comments to show-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!-- Send Kudos to Employee -->
+    <div id="employees" class="content-section">
+        <h2>Send Kudos to Employee</h2>
+        <form id="kudosForm">
+            <div id="employeeError" class="alert alert-danger d-none"></div>
+            <input type="hidden" id="senderId" th:value="${employee.id}">
+            <div class="mb-3">
+                <label class="form-label">Select Employee</label>
+                <select class="form-select" id="receiverId" required>
+                    <option value="">-- Select Employee --</option>
+                    <option th:each="emp : ${allEmployees}" th:value="${emp.id}" th:text="${emp.name}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Message</label>
+                <textarea class="form-control" id="message" placeholder="Write your message..."></textarea>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="anonymous">
+                <label class="form-check-label">Send as Anonymous</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Kudos</button>
+        </form>
+    </div>
+
+    <!-- Send Kudos to Team -->
+    <div id="teams" class="content-section">
+        <h2>Send Kudos to Team</h2>
+        <form id="teamKudosForm">
+            <div id="teamError" class="alert alert-danger d-none"></div>
+            <input type="hidden" id="teamSenderId" th:value="${employee.id}">
+            <div class="mb-3">
+                <label class="form-label">Select Team</label>
+                <select class="form-select" id="teamId" required>
+                    <option value="">-- Select Team --</option>
+                    <option th:each="team : ${allTeams}" th:value="${team.id}" th:text="${team.name}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Message</label>
+                <textarea class="form-control" id="teamMessage" placeholder="Write your message..."></textarea>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="teamAnonymous">
+                <label class="form-check-label">Send as Anonymous</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Team Kudos</button>
+        </form>
+    </div>
+
+    <!-- Leave Comment -->
+    <div id="comments" class="content-section">
+        <h2>Leave a Comment</h2>
+        <div id="commentError" class="alert alert-danger d-none"></div>
+        <form id="commentForm">
+
+            <input type="hidden" id="commentSenderId" th:value="${employee.id}">
+            <div class="mb-3">
+                <label class="form-label">Select Target</label>
+                <select class="form-select" id="commentTargetId" required>
+                    <option value="">-- Select Employee or Team --</option>
+                    <option th:each="emp : ${allEmployees}" th:value="${emp.id}" th:text="${emp.name}" data-type="employee"></option>
+                    <option th:each="team : ${allTeams}" th:value="${team.id}" th:text="${team.name}" data-type="team"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Message</label>
+                <textarea class="form-control" id="commentMessage" placeholder="Write your comment..." required></textarea>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="commentAnonymous">
+                <label class="form-check-label">Send as Anonymous</label>
+            </div>
+            <button type="submit" class="btn btn-secondary">Leave Comment</button>
+        </form>
+    </div>
+
+    <!-- Kudos History -->
+    <div id="history" class="content-section">
+        <h2>Kudos & Comment History</h2>
+        <div class="mb-3">
+            <label class="form-label">Select Employee</label>
+            <select class="form-select" id="historyEmployeeId">
+                <option value="">-- Select Employee --</option>
+                <option th:each="emp : ${allEmployees}" th:value="${emp.id}" th:text="${emp.name}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Select Team</label>
+            <select class="form-select" id="historyTeamId">
+                <option value="">-- Select Team --</option>
+                <option th:each="team : ${allTeams}" th:value="${team.id}" th:text="${team.name}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Time Range</label>
+            <select class="form-select" id="historyDays">
+                <option value="7">Past Week</option>
+                <option value="30">Past Month</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-info me-2" id="fetchEmployeeHistory">Fetch Employee History</button>
+            <button class="btn btn-info" id="fetchTeamHistory">Fetch Team History</button>
+            <button class="btn btn-secondary ms-2" id="fetchRecentKudos">Recent Kudos</button>
+        </div>
+        <div id="historyResults"></div>
+    </div>
+
+    <!-- ✅ Leaderboard Section -->
+    <div id="leaderboard" class="content-section">
+        <h2 class="text-center mb-4">🏆 Kudos Leaderboard (Past Month)</h2>
+
+        <div class="row mb-4 justify-content-center">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Filter by Department:</label>
+                <select id="leaderDeptFilter" class="form-select shadow-sm">
+                    <option value="">All Departments</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Operations">Operations</option>
+                    <option value="Support">Support</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="HR">HR</option>
+                    <option value="Finance">Finance</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-md-6 mb-4">
+                <canvas id="topEmployeesChart" height="250"></canvas>
+                <h5 class="mt-3">Top 5 Employees</h5>
+            </div>
+            <div class="col-md-6 mb-4">
+                <canvas id="topTeamsChart" height="250"></canvas>
+                <h5 class="mt-3">Top 5 Teams</h5>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Leaderboard</h2>
+            <button id="resetKudosBtn" class="btn btn-danger btn-sm">
+                🔄 Reset Kudos
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ✅ Add Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!--Reset Button-->
+<script>
+    document.getElementById("resetKudosBtn").addEventListener("click", async () => {
+        const confirmReset = await Swal.fire({
+            title: "Reset All Kudos?",
+            text: "This will set all employee and team kudos counts back to zero. Continue?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Reset",
+            cancelButtonText: "Cancel"
+        });
+
+        if (confirmReset.isConfirmed) {
+            try {
+                const res = await fetch("/api/kudos/leaderboard/reset", {
+                    method: "POST"
+                });
+                if (!res.ok) throw new Error("Failed to reset kudos.");
+
+                await Swal.fire({
+                    title: "✅ Success!",
+                    text: "All kudos counts have been reset.",
+                    icon: "success"
+                });
+
+                // Optionally reload leaderboard after reset
+                loadLeaderboardCharts();
+            } catch (err) {
+                Swal.fire({
+                    title: "Error",
+                    text: err.message,
+                    icon: "error"
+                });
+            }
+        }
+    });
+</script>
+
+<!--Pie Chart-->
+<script>
+    let employeeChart, teamChart;
+
+    // 🎨 Helper: Create Pie Chart
+    function createPieChart(ctx, labels, data, title) {
+        return new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: title,
+                    data: data,
+                    backgroundColor: [
+                        '#4e79a7', '#f28e2b', '#e15759',
+                        '#76b7b2', '#59a14f', '#edc948',
+                        '#b07aa1', '#ff9da7'
+                    ],
+                    borderWidth: 1,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: title,
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    // 🚀 Load Leaderboard Charts
+    async function loadLeaderboardCharts(department = "") {
+        try {
+            // Employees - top 5 kudos (past month)
+            const empUrl = department
+                ? `/api/kudos/leaderboard/employees?department=${department}`
+                : `/api/kudos/leaderboard/employees`;
+            const empRes = await fetch(empUrl);
+            const empData = await empRes.json();
+
+            // Sort and take top 5 by kudos_count
+            const topEmployees = empData
+                .sort((a, b) => b.kudosCount - a.kudosCount)
+                .slice(0, 5);
+
+            const empNames = topEmployees.map(e => e.name);
+            const empKudos = topEmployees.map(e => e.kudosCount);
+
+            // Teams - top 5 kudos (past month)
+            const teamRes = await fetch(`/api/kudos/leaderboard/teams`);
+            const teamData = await teamRes.json();
+
+            const topTeams = teamData
+                .sort((a, b) => b.kudosCount - a.kudosCount)
+                .slice(0, 5);
+
+            const teamNames = topTeams.map(t => t.name);
+            const teamKudos = topTeams.map(t => t.kudosCount);
+
+            // Destroy previous charts
+            if (employeeChart) employeeChart.destroy();
+            if (teamChart) teamChart.destroy();
+
+            // Create new charts
+            const empCtx = document.getElementById('topEmployeesChart').getContext('2d');
+            employeeChart = createPieChart(empCtx, empNames, empKudos, 'Top 5 Employees (Past Month)');
+
+            const teamCtx = document.getElementById('topTeamsChart').getContext('2d');
+            teamChart = createPieChart(teamCtx, teamNames, teamKudos, 'Top 5 Teams (Past Month)');
+        } catch (err) {
+            console.error("❌ Error loading leaderboard charts:", err);
+        }
+    }
+
+    // 🎯 Department Filter
+    document.getElementById("leaderDeptFilter").addEventListener("change", function() {
+        loadLeaderboardCharts(this.value);
+    });
+
+    // 📊 Initial Load
+    loadLeaderboardCharts();
+</script>
+
+<!--Search Employee-->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchInput = document.getElementById("searchInput");
+      const tableBody = document.getElementById("employeeTableBody");
+
+      // ✅ Load and render employees with kudos/comments
+      async function loadEmployees(keyword = "") {
+        const url = keyword
+          ? `/api/employees/with-kudos?keyword=${encodeURIComponent(keyword)}`
+          : `/api/employees/with-kudos`;
+
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error("Failed to fetch employees with kudos/comments");
+          const data = await res.json();
+          renderEmployeeTable(data);
+        } catch (err) {
+          console.error("❌ Error loading employees:", err);
+          tableBody.innerHTML =
+            '<tr><td colspan="5" class="text-center text-danger">Error loading employees</td></tr>';
+        }
+      }
+
+      // ✅ Render employees into table
+      function renderEmployeeTable(data) {
+        tableBody.innerHTML = "";
+
+        if (!data || data.length === 0) {
+          tableBody.innerHTML =
+            '<tr><td colspan="5" class="text-center text-muted">No employees found</td></tr>';
+          return;
+        }
+
+        data.forEach((emp) => {
+          const row = document.createElement("tr");
+          row.setAttribute("data-id", emp.id);
+          row.innerHTML = `
+            <td>${emp.name}</td>
+            <td>${emp.email}</td>
+            <td>${emp.department}</td>
+            <td>${emp.kudosCount}</td>
+            <td>${emp.commentCount}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+        // After rendering, attach click listeners
+        attachEmployeeRowClickEvents();
+      }
+
+      // ✅ Fetch individual employee kudos/comments when row clicked
+      function attachEmployeeRowClickEvents() {
+        document.querySelectorAll("#employeeTableBody tr").forEach((row) => {
+          row.addEventListener("click", () => {
+            const employeeId = row.getAttribute("data-id");
+            fetch(`/api/kudos/employee/${employeeId}`)
+              .then((res) => res.json())
+              .then((data) => {
+                const kudosList = document.getElementById("kudosList");
+                kudosList.innerHTML = "";
+
+                if (data.length > 0) {
+                  data.forEach((k) => {
+                    const li = document.createElement("li");
+                    li.className = "list-group-item";
+                    li.textContent = `[${k.type}] ${k.message}`;
+                    kudosList.appendChild(li);
+                  });
+                } else {
+                  kudosList.innerHTML =
+                    '<li class="list-group-item text-muted text-center">No kudos/comments to show</li>';
+                }
+              })
+              .catch((err) => {
+                console.error("❌ Error fetching kudos:", err);
+              });
+          });
+        });
+      }
+
+      // 🔍 Live search
+      searchInput.addEventListener("input", (e) => {
+        const keyword = e.target.value.trim();
+        loadEmployees(keyword);
+      });
+
+      // 🚀 Initial load
+      loadEmployees();
+    });
+</script>
+
+<!-- ✅ SweetAlert + Search Script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Script Section -->
+<script>
+    // Sidebar navigation toggle
+    const navLinks = document.querySelectorAll('#sidebar .nav-link');
+    const sections = document.querySelectorAll('.content-section');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            sections.forEach(sec => sec.classList.remove('active'));
+            const targetId = link.getAttribute('data-target');
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    // Leaderboard
+    function loadLeaderboard(department = "") {
+        // Employees
+        fetch(`/api/kudos/leaderboard/employees?department=${department}`)
+            .then(res => res.json())
+            .then(data => {
+                const empList = document.getElementById("topEmployees");
+                empList.innerHTML = "";
+                data.forEach(emp => {
+                    const li = document.createElement("li");
+                    li.classList.add("list-group-item");
+                    li.textContent = `${emp.name} — ${emp.kudosCount} Kudos`;
+                    empList.appendChild(li);
+                });
+            });
+
+        // Teams
+        fetch(`/api/kudos/leaderboard/teams`)
+            .then(res => res.json())
+            .then(data => {
+                const teamList = document.getElementById("topTeams");
+                teamList.innerHTML = "";
+                data.forEach(team => {
+                    const li = document.createElement("li");
+                    li.classList.add("list-group-item");
+                    li.textContent = `${team.name} — ${team.kudosCount} Kudos`;
+                    teamList.appendChild(li);
+                });
+            });
+    }
+
+    document.getElementById("leaderDeptFilter").addEventListener("change", function() {
+        loadLeaderboard(this.value);
+    });
+
+    // Load leaderboard on page load
+    loadLeaderboard();
+
+    // Employee Kudos Submission
+    document.getElementById("kudosForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const senderId = document.getElementById("senderId").value;
+      const receiverId = document.getElementById("receiverId").value;
+      const message = document.getElementById("message").value;
+      const isAnonymous = document.getElementById("anonymous").checked;
+
+      const errorDiv = document.getElementById("teamError");
+      errorDiv.classList.add("d-none");
+      errorDiv.innerText = "";
+
+      fetch("http://localhost:8080/api/kudos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          senderId,
+          receiverId,
+          message,
+          anonymous: isAnonymous,
+          type: "kudos"
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("Kudos sent successfully!");
+        document.getElementById("message").value = "";
+        document.getElementById("receiverId").value = "";
+        document.getElementById("anonymous").checked = false;
+        fetchKudosFeed(receiverId);
+      })
+      .catch(err => alert(err.message));
+    });
+
+    // Team Kudos Submission
+    document.getElementById("teamKudosForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const senderId = document.getElementById("teamSenderId").value;
+        const teamId = document.getElementById("teamId").value;
+        const message = document.getElementById("teamMessage").value;
+        const isAnonymous = document.getElementById("teamAnonymous").checked;
+
+        const errorDiv = document.getElementById("teamError");
+        errorDiv.classList.add("d-none");
+        errorDiv.innerText = "";
+
+        fetch("http://localhost:8080/api/kudos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                senderId,
+                teamId,
+                message,
+                anonymous: isAnonymous,
+                type: "kudos"
+            })
+        })
+        .then(async res => {
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message);
+            }
+            return res.json();
+        })
+        .then(data => {
+            alert("Kudos sent to team successfully!");
+            document.getElementById("teamMessage").value = "";
+            document.getElementById("teamId").value = "";
+            document.getElementById("teamAnonymous").checked = false;
+        })
+        .catch(err => {
+            errorDiv.innerText = err.message;
+            errorDiv.classList.remove("d-none");
+        });
+    });
+
+    // Leave Comment
+    document.getElementById("commentForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const senderId = document.getElementById("commentSenderId").value;
+        const selectEl = document.getElementById("commentTargetId");
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        const targetId = selectedOption.value;
+        const isTeam = selectedOption.dataset.type === "team";
+        const message = document.getElementById("commentMessage").value;
+        const anonymous = document.getElementById("commentAnonymous").checked;
+
+        const errorDiv = document.getElementById("commentError");
+        errorDiv.classList.add("d-none");
+        errorDiv.innerText = "";
+
+        fetch("http://localhost:8080/api/kudos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                senderId,
+                receiverId: isTeam ? null : targetId,
+                teamId: isTeam ? targetId : null,
+                message,
+                anonymous,
+                type: "comment"
+            })
+        })
+        .then(async res => {
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message);
+            }
+            return res.json();
+        })
+        .then(data => {
+            alert("Comment submitted successfully!");
+            document.getElementById("commentMessage").value = "";
+            selectEl.value = "";
+            document.getElementById("commentAnonymous").checked = false;
+        })
+        .catch(err => {
+            errorDiv.innerText = err.message;
+            errorDiv.classList.remove("d-none");
+        });
+    });
+
+    // Fetch Employee History
+    document.getElementById("fetchEmployeeHistory").addEventListener("click", function() {
+        const empId = document.getElementById("historyEmployeeId").value;
+        const days = document.getElementById("historyDays").value;
+        if (!empId) return alert("Please select an employee");
+
+        fetch(`http://localhost:8080/api/kudos/employee/${empId}?days=${days}`)
+            .then(res => res.json())
+            .then(data => renderKudosList("historyResults", data))
+            .catch(err => console.error(err));
+    });
+
+    // Fetch Team History
+    document.getElementById("fetchTeamHistory").addEventListener("click", function() {
+        const teamId = document.getElementById("historyTeamId").value;
+        const days = document.getElementById("historyDays").value;
+        if (!teamId) return alert("Please select a team");
+
+        fetch(`http://localhost:8080/api/kudos/team/${teamId}?days=${days}`)
+            .then(res => res.json())
+            .then(data => renderKudosList("historyResults", data))
+            .catch(err => console.error(err));
+    });
+
+    // Fetch Recent Kudos
+    document.getElementById("fetchRecentKudos").addEventListener("click", function() {
+        fetch(`http://localhost:8080/api/kudos/recent?limit=10`)
+            .then(res => res.json())
+            .then(data => renderKudosList("historyResults", data))
+            .catch(err => console.error(err));
+    });
+
+    // Search Kudos / Comments
+    document.getElementById("searchBtn").addEventListener("click", function() {
+        const query = document.getElementById("searchQuery").value.trim();
+        if (!query) return alert("Enter employee or team name");
+
+        fetch(`http://localhost:8080/api/kudos/search?query=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => renderKudosList("searchResults", data))
+            .catch(err => console.error(err));
+    });
+
+    // Render Kudos list
+    function renderKudosList(containerId, kudosList) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+        if (!kudosList || kudosList.length === 0) {
+            container.innerHTML = "<p class='text-muted'>No records found.</p>";
+            return;
+        }
+        kudosList.forEach(kudos => {
+            const div = document.createElement("div");
+            div.classList.add("card", "mb-2", "p-2");
+            div.innerHTML = `
+                <strong>${kudos.anonymous ? "Anonymous" : (kudos.sender ? kudos.sender.name : "Unknown")}</strong> →
+                <strong>${kudos.receiver ? kudos.receiver.name : (kudos.targetTeam ? kudos.targetTeam.name : "Unknown")}</strong>:
+                ${kudos.message}
+                <br>
+                <small class="text-muted">${new Date(kudos.createdAt).toLocaleString()}</small>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // Fetch received kudos
+    function fetchKudosFeed(receiverId) {
+      fetch(`http://localhost:8080/api/kudos/received/${receiverId}`)
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById("kudosList");
+          list.innerHTML = "";
+          data.forEach(kudos => {
+            const li = document.createElement("li");
+            li.classList.add("list-group-item");
+            li.innerHTML = `<strong>${kudos.anonymous ? "Anonymous" : kudos.sender.name}</strong>: ${kudos.message}<br><small class="text-muted">${new Date(kudos.createdAt).toLocaleString()}</small>`;
+            list.appendChild(li);
+          });
+        });
+    }
+
+    document.getElementById("uploadForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const response = await fetch(this.action, { method: "POST", body: formData });
+        const data = await response.json();
+
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: '🎉 Upload Employee Successfully!',
+                text: data.message || 'Employee CSV uploaded successfully!',
+                confirmButtonColor: '#28a745',
+                timer: 2500,
+                showConfirmButton: false
+            });
+            setTimeout(() => location.reload(), 2600);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Failed!',
+                text: data.message || 'Something went wrong. Please try again.',
+                confirmButtonColor: '#d33'
+            });
+        }
+    });
+
+
+</script>
+
+</body>
+</html>
