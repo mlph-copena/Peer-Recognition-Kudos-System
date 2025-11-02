@@ -166,9 +166,8 @@ Realized how modern front-end frameworks can improve UX and client perception.
 
 Understood the importance of regular communication in project development.
 
-👤 Author
-
+👤 Dev
 Christian Marty Opeña
 Java Training Project – Kudos System
 Monstarlab Philippines
-📅 October 2025
+📅 November 2025
