@@ -2,7 +2,6 @@ package com.kudossystem.kudossystem.service;
 
 import com.kudossystem.kudossystem.domain.Employee;
 import com.kudossystem.kudossystem.domain.Kudos;
-import com.kudossystem.kudossystem.domain.KudosComment;
 import com.kudossystem.kudossystem.domain.Team;
 import com.kudossystem.kudossystem.dto.KudosCommentDTO;
 import com.kudossystem.kudossystem.dto.KudosLeaderboardEmployeeDto;
@@ -20,7 +19,6 @@ public interface KudosService {
     List<Kudos> findByTeam(Team team);
 
     // ✅ New methods for history & search
-    // ✅ New methods for history/search
     List<Kudos> getKudosByEmployee(Long employeeId, int pastDays);
     List<Kudos> getKudosByTeam(Long teamId, int pastDays);
     List<Kudos> getRecentKudos(int limit);

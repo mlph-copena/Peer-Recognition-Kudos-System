@@ -4,7 +4,6 @@ import com.kudossystem.kudossystem.domain.Employee;
 import com.kudossystem.kudossystem.domain.Kudos;
 import com.kudossystem.kudossystem.domain.KudosType;
 import com.kudossystem.kudossystem.domain.Team;
-import com.kudossystem.kudossystem.dto.EmployeeKudosDTO;
 import com.kudossystem.kudossystem.dto.KudosCommentDTO;
 import com.kudossystem.kudossystem.dto.KudosLeaderboardEmployeeDto;
 import com.kudossystem.kudossystem.dto.KudosLeaderboardTeamDto;
@@ -18,9 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +27,6 @@ public class KudosServiceImpl implements KudosService {
     private final KudosRepository kudosRepository;
     private final EmployeeRepository employeeRepository;
     private final TeamRepository teamRepository;
-
-
 
     // ----------------- Existing Methods -----------------
     @Override
@@ -135,7 +129,6 @@ public class KudosServiceImpl implements KudosService {
         return kudosRepository.findByTargetTeam(team);
     }
 
-
     // ----------------- New Methods -----------------
 
     @Override
@@ -201,6 +194,4 @@ public class KudosServiceImpl implements KudosService {
         employeeRepository.resetAllKudosCounts();
         teamRepository.resetAllKudosCounts();
     }
-
-
 }
