@@ -1,75 +1,174 @@
-# Peer Recognition & Kudos System
+🏆 Kudos System – Java & PHP Integration Project
+📘 Overview
 
-**Junior Java Training Program Final Project**
+This project was developed as part of the [Java Training] Project Presentation by Christian Marty Opeña.
+It showcases an employee recognition system (Kudos System) built using Java (Spring Boot), PHP, and MySQL, running under XAMPP with PHPMyAdmin for database management.
 
-A system where anyone can submit kudos or comments to employees or teams, with an admin panel to manage employees and track kudos.
+The system allows users to manage employees and teams, send kudos, and view leaderboards — integrating both backend logic and database operations through Java and MySQL, with a PHP-based UI.
 
----
+🧩 Project Architecture
+Technology Stack
+Layer	Technology / Tool
+Frontend (UI)	Pure PHP
+Backend	Java (Spring Boot)
+Database	MySQL
+Database Management	PHPMyAdmin
+Local Server	XAMPP
+Development Tools	IntelliJ IDEA / VS Code
+Concepts Used	DTOs, Domain, Repository Pattern, Error Handling
+⚙️ System Features
+Employee & Team Management
 
-## How I Built This Project
+Add or update employee/team data via CSV file upload
 
-### 1. Project Setup
+CSV validation includes:
 
-- Created a new **Spring Boot** project in **IntelliJ IDEA**.
-- Added dependencies for:
-    - Spring Web
-    - Spring Data JPA
-    - MySQL Driver
-    - Lombok
-    - Spring Security (for Admin login)
-    - Swagger (for API documentation)
+Duplicate entry detection
 
-### 2. Database Design
+Missing field validation
 
-- Used **MySQL** as the database.
-- Created tables for:
-    - `employees` (id, name, email, department, teams)
-    - `teams` (id, name)
-    - `kudos` (id, sender_name, target_employee/team, message, anonymous, date)
-    - `admin` (id, email, password)
-- Configured `application.properties` to connect Spring Boot to MySQL.
+Error/success logging after upload
 
-### 3. Admin Panel
+Kudos Sending & History
 
-- Implemented **CSV upload** for employees using `MultipartFile`.
-- Added validation to prevent duplicate employees.
-- Implemented **login functionality** for Admin with Spring Security.
-- Added optional **reset kudos counts** functionality.
+Employees can send kudos with optional comments
 
-### 4. Kudos & Comments System
+Each kudo is logged and reflected in the history table and database
 
-- Public form to submit kudos/comments.
-- Options for:
-    - Sending to individual employees or entire teams.
-    - Anonymous submissions.
-- Validations to prevent:
-    - Sending to non-existent employees/teams.
-    - Duplicate submissions from the same sender per day.
+Kudos are displayed on the leaderboard
 
-### 5. Public Search & Leaderboards
+Leaderboard
 
-- Created REST API endpoints to:
-    - Search employees or teams by name.
-    - Display recent kudos/comments.
-    - Display top 5 employees/teams by kudos (monthly).
-- Added filtering by department or team.
+Displays Top 5 Employees and Top 5 Teams
 
-### 6. Testing
+Filterable by department: Operations, Support, Marketing, and HR
 
-- Wrote unit tests for service layer methods.
-- Tested API endpoints using **Swagger UI**.
+Error Handling
 
-### 7. Version Control
+Detects duplicate employees in CSV uploads
 
-- Initialized Git repository and pushed project to **GitHub**.
-- Committed incrementally with descriptive messages for each feature.
+Displays user-friendly messages for upload results
 
----
+Logs all invalid, successful, and duplicate entries
 
-## How to Run the Project
+🏗️ Application Flow
 
-1. **Clone the repository:**
+Admin uploads CSV file containing employee and team data.
 
-```bash
-git clone https://github.com/mlph-copena/Peer-Recognition-Kudos-System.git
-cd YourRepo
+Backend validates and stores records in MySQL through Spring Boot services.
+
+Employees can log in via the PHP interface to send kudos or view leaderboards.
+
+Leaderboard dynamically updates based on kudos count.
+
+🧰 Installation & Setup Guide
+1. Prerequisites
+
+Make sure you have the following installed:
+
+🖥️ XAMPP (for Apache + PHPMyAdmin + MySQL)
+
+☕ Java JDK 17+
+
+🧩 Maven (for building Spring Boot)
+
+💾 Git
+
+💡 IDE (e.g., IntelliJ IDEA, VS Code)
+
+2. Database Setup
+
+Open XAMPP Control Panel → Start Apache and MySQL.
+
+Access PHPMyAdmin via http://localhost/phpmyadmin
+.
+
+Create a database named:
+
+kudos_db
+
+
+Import the kudos_schema.sql file into this database.
+
+3. Run the Backend
+
+Navigate to the java-backend directory.
+
+Run:
+
+mvn spring-boot:run
+
+Spring Boot will start on http://localhost:8080
+
+Copy the php-ui folder into htdocs inside your XAMPP installation.
+Example path:
+
+C:\xampp\htdocs\kudos-system\
+
+
+Access the UI via:
+http://localhost/kudos-system
+
+✅ Key Highlights
+
+Applied Domain-Driven Design (DDD) concepts:
+
+DTOs (Data Transfer Objects)
+
+Domain separation
+
+Repository pattern
+
+Used Spring Boot for backend logic and PHP for presentation layer
+
+Integrated MySQL database using PHPMyAdmin under XAMPP
+
+Included error handling for duplicate or missing CSV data
+
+💬 Feedback Summary (from Ma. Clarissa Estremos)
+Positive Points
+
+Commended structured backend using DTOs, domains, and repositories.
+
+Recognized strong backend logic and data integration.
+
+Areas for Improvement
+
+Replace the server-side PHP UI with a modern front-end framework (React, Vue, Angular, or Next.js).
+
+Add friendlier user messages and modal popups for CSV upload feedback.
+
+Implement role-based access (separate employee and admin pages).
+
+Enhance UI design and consistency for a better user experience.
+
+🚀 Next Steps
+
+Document all feedback and improvements (✅ Done)
+
+Push final codebase to GitHub by Monday, 9:00 a.m.
+
+Research and apply a modern UI framework (React, Vue, Angular, or Next.js)
+
+Add success/error modals for user feedback
+
+Refactor UI for better UX and visual design
+
+🧠 Lessons Learned
+
+Importance of clear architecture between backend, UI, and database.
+
+Benefits of DTOs and repositories for clean, maintainable Java code.
+
+Learned how PHPMyAdmin and Spring Boot can work together efficiently.
+
+Realized how modern front-end frameworks can improve UX and client perception.
+
+Understood the importance of regular communication in project development.
+
+👤 Author
+
+Christian Marty Opeña
+Java Training Project – Kudos System
+Monstarlab Philippines
+📅 October 2025

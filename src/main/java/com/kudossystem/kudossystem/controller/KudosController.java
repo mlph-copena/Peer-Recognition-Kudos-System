@@ -2,19 +2,13 @@ package com.kudossystem.kudossystem.controller;
 
 import com.kudossystem.kudossystem.domain.Kudos;
 import com.kudossystem.kudossystem.domain.KudosType;
-import com.kudossystem.kudossystem.domain.Employee;
-import com.kudossystem.kudossystem.dto.EmployeeKudosDTO;
 import com.kudossystem.kudossystem.dto.KudosCommentDTO;
 import com.kudossystem.kudossystem.dto.KudosLeaderboardEmployeeDto;
 import com.kudossystem.kudossystem.dto.KudosLeaderboardTeamDto;
-import com.kudossystem.kudossystem.repository.EmployeeRepository;
-import com.kudossystem.kudossystem.repository.KudosRepository;
 import com.kudossystem.kudossystem.service.KudosService;
-import com.kudossystem.kudossystem.service.impl.KudosServiceImpl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -147,8 +141,4 @@ public class KudosController {
     public List<KudosLeaderboardTeamDto> topTeams() {
         return kudosService.getTopTeamsByKudos();
     }
-
-
-
-
 }

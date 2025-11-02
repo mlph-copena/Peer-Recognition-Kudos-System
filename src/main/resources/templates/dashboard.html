@@ -44,9 +44,6 @@
         <li class="nav-item">
             <span class="nav-link active" data-target="upload">Manage Employees</span>
         </li>
-<!--        <li>-->
-<!--            <span class="nav-link" data-target="upload">Manage Employees</span>-->
-<!--        </li>-->
         <li>
             <span class="nav-link" data-target="employees">Send Kudos to Employee</span>
         </li>
@@ -140,79 +137,6 @@
             </ul>
         </div>
     </div>
-
-<!--    &lt;!&ndash; ✅ Manage Employees Section &ndash;&gt;-->
-<!--    <div id="upload" class="content-section">-->
-<!--        <h2>Manage Employees</h2>-->
-
-<!--        &lt;!&ndash; Upload Employee CSV &ndash;&gt;-->
-<!--        <div class="card p-4 mb-4 shadow-sm">-->
-<!--            <h5>Upload Employee CSV</h5>-->
-<!--            <form-->
-<!--                    id="uploadForm"-->
-<!--                    th:action="@{/admin/upload-employees}"-->
-<!--                    method="post"-->
-<!--                    enctype="multipart/form-data"-->
-<!--            >-->
-<!--                <div class="mb-3">-->
-<!--                    <input-->
-<!--                            class="form-control"-->
-<!--                            type="file"-->
-<!--                            name="file"-->
-<!--                            accept=".csv"-->
-<!--                            required-->
-<!--                    />-->
-<!--                </div>-->
-<!--                <button type="submit" class="btn btn-success">Upload CSV</button>-->
-<!--            </form>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 🔍 Search Field &ndash;&gt;-->
-<!--        <div class="card p-4 mb-4 shadow-sm">-->
-<!--            <h5>Search Employees / Teams</h5>-->
-<!--            <input-->
-<!--                    type="text"-->
-<!--                    id="searchInput"-->
-<!--                    class="form-control"-->
-<!--                    placeholder="Search by name or department..."-->
-<!--            />-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 👩‍💼 Employee Table &ndash;&gt;-->
-<!--        <div class="card p-4 shadow-sm">-->
-<!--            <h5>All Employees / Teams</h5>-->
-<!--            <table id="employeeTable" class="table table-bordered table-striped mt-3">-->
-<!--                <thead class="table-dark">-->
-<!--                <tr>-->
-<!--                    <th>Name</th>-->
-<!--                    <th>Email</th>-->
-<!--                    <th>Department / Team</th>-->
-<!--                    <th>Kudos</th>-->
-<!--                    <th>Public Comment</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody id="employeeTableBody">-->
-<!--                <tr th:each="emp : ${allEmployees}" th:attr="data-id=${emp.id}">-->
-<!--                    <td th:text="${emp.name}"></td>-->
-<!--                    <td th:text="${emp.email}"></td>-->
-<!--                    <td th:text="${emp.department}"></td>-->
-<!--                    <td th:text="${emp.kudosCount}"></td>-->
-<!--                    <td th:text="${emp.commentCount}"></td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--            </table>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 💬 Public Kudos / Comments &ndash;&gt;-->
-<!--        <div class="card p-4 shadow-sm mt-4">-->
-<!--            <h5>Public Kudos / Comments</h5>-->
-<!--            <ul id="kudosList" class="list-group">-->
-<!--                <li class="list-group-item text-muted text-center">-->
-<!--                    No kudos/comments to show-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </div>-->
-<!--    </div>-->
 
     <!-- Send Kudos to Employee -->
     <div id="employees" class="content-section">
@@ -365,6 +289,52 @@
 
 </div>
 
+<!-- ✅ Generic Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-success">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">Success</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="successModalMessage"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Generic Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="errorModalMessage"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showModal(type, message) {
+      if (type === 'success') {
+        document.getElementById("successModalMessage").textContent = message;
+        const modal = new bootstrap.Modal(document.getElementById('successModal'));
+        modal.show();
+      } else if (type === 'error') {
+        document.getElementById("errorModalMessage").textContent = message;
+        const modal = new bootstrap.Modal(document.getElementById('errorModal'));
+        modal.show();
+      }
+    }
+</script>
+
 <!-- ✅ Add Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -502,7 +472,6 @@
       const searchInput = document.getElementById("searchInput");
       const tableBody = document.getElementById("employeeTableBody");
 
-      // ✅ Load and render employees with kudos/comments
       async function loadEmployees(keyword = "") {
         const url = keyword
           ? `/api/employees/with-kudos?keyword=${encodeURIComponent(keyword)}`
@@ -514,13 +483,12 @@
           const data = await res.json();
           renderEmployeeTable(data);
         } catch (err) {
-          console.error("❌ Error loading employees:", err);
+          console.error("Error loading employees:", err);
           tableBody.innerHTML =
             '<tr><td colspan="5" class="text-center text-danger">Error loading employees</td></tr>';
         }
       }
 
-      // ✅ Render employees into table
       function renderEmployeeTable(data) {
         tableBody.innerHTML = "";
 
@@ -543,11 +511,9 @@
           tableBody.appendChild(row);
         });
 
-        // After rendering, attach click listeners
         attachEmployeeRowClickEvents();
       }
 
-      // ✅ Fetch individual employee kudos/comments when row clicked
       function attachEmployeeRowClickEvents() {
         document.querySelectorAll("#employeeTableBody tr").forEach((row) => {
           row.addEventListener("click", () => {
@@ -570,9 +536,7 @@
                     '<li class="list-group-item text-muted text-center">No kudos/comments to show</li>';
                 }
               })
-              .catch((err) => {
-                console.error("❌ Error fetching kudos:", err);
-              });
+              .catch((err) => console.error("Error fetching kudos:", err));
           });
         });
       }
@@ -873,9 +837,6 @@
             });
         }
     });
-
-
 </script>
-
 </body>
 </html>
